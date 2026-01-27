@@ -1,0 +1,741 @@
+openapi: 3.0.3
+info:
+  title: Back-2-Campus API
+  version: 1.0.0
+  description: OpenAPI specification for frontend/backend integration (generated from frontend pages).
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server (update when deployed)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: object
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [student, mentor, admin]
+        avatarUrl:
+          type: string
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        role:
+          type: string
+          enum: [student, mentor]
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+    SignupRequest:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        role:
+          type: string
+          enum: [student, mentor]
+    Mentor:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        bio:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        rating:
+          type: number
+    Skill:
+      type: object
+      properties:
+        name:
+          type: string
+        score:
+          type: number
+    MatchRequest:
+      type: object
+      required: [mentorId]
+      properties:
+        mentorId:
+          type: string
+        message:
+          type: string
+    Webinar:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startsAt:
+          type: string
+          format: date-time
+    UploadResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+    DashboardStudent:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            type: string
+        upcomingSessions:
+          type: array
+          items:
+            type: object
+        stats:
+          type: object
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+paths:
+  /api/v1/auth/login-student:
+    post:
+      summary: Student Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/auth/signup-student:
+    post:
+      summary: Student Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/auth/logout:
+    post:
+      summary: Logout
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Logged out
+  /api/v1/auth/send-otp:
+    post:
+      summary: Send OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                purpose:
+                  type: string
+      responses:
+        "200":
+          description: OTP sent
+  /api/v1/auth/verify-otp:
+    post:
+      summary: Verify OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                otp:
+                  type: string
+      responses:
+        "200":
+          description: Verified
+  /api/v1/auth/forgot-password:
+    post:
+      summary: Forgot password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: Reset email sent
+  /api/v1/auth/reset-password:
+    post:
+      summary: Reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        "200":
+          description: Password reset
+  /api/v1/users/me:
+    get:
+      summary: Get current user
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      summary: Update profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                avatarUrl:
+                  type: string
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v1/users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v1/users/avatar:
+    post:
+      summary: Upload avatar
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+  /api/v1/mentors:
+    get:
+      summary: List mentors
+      parameters:
+        - name: skills
+          in: query
+          schema:
+            type: string
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Mentor list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mentors:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Mentor"
+                  meta:
+                    type: object
+  /api/v1/mentors/{id}:
+    get:
+      summary: Get mentor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Mentor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Mentor"
+  /api/v1/matches/request:
+    post:
+      summary: Request match with mentor
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+      responses:
+        "201":
+          description: Match request created
+  /api/v1/matches:
+    get:
+      summary: List match requests
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requests:
+                    type: array
+                    items:
+                      type: object
+  /api/v1/matches/{id}/respond:
+    put:
+      summary: Respond to match request
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [accept, reject]
+      responses:
+        "200":
+          description: Updated
+  /api/v1/skills/scan:
+    post:
+      summary: Scan text/file to extract skills
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Skills extracted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skills:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Skill"
+  /api/v1/skills/evaluate:
+    post:
+      summary: Evaluate skills (assessment)
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                assessmentAnswers:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        "200":
+          description: Evaluation results
+  /api/v1/skills/twin/{userId}:
+    get:
+      summary: Get skill twin profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Twin profile
+  /api/v1/skills/import:
+    post:
+      summary: Import skills
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skills:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Skill"
+      responses:
+        "200":
+          description: Imported
+  /api/v1/dashboard/student:
+    get:
+      summary: Student dashboard data
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStudent"
+  /api/v1/dashboard/mentor:
+    get:
+      summary: Mentor dashboard data
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Dashboard
+  /api/v1/webinars:
+    get:
+      summary: List webinars
+      responses:
+        "200":
+          description: Webinars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Webinar"
+  /api/v1/webinars/{id}:
+    get:
+      summary: Get webinar
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Webinar
+  /api/v1/webinars/{id}/register:
+    post:
+      summary: Register for webinar
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Registered
+  /api/v1/insights/universities:
+    get:
+      summary: List universities / insights
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: University list
+  /api/v1/insights/universities/{id}:
+    get:
+      summary: University details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: University stats
+  /api/v1/wellbeing/resources:
+    get:
+      summary: Wellbeing resources
+      responses:
+        "200":
+          description: Resources
+  /api/v1/wellbeing/submit:
+    post:
+      summary: Submit wellbeing survey
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                surveyResponses:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        "200":
+          description: Submitted
+  /api/v1/notifications:
+    get:
+      summary: Get notifications
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+  /api/v1/notifications/mark-read:
+    post:
+      summary: Mark notifications read
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Marked
+  /api/v1/uploads:
+    post:
+      summary: Upload file
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                type:
+                  type: string
+      responses:
+        "201":
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+  /api/v1/uploads/{id}:
+    get:
+      summary: Get uploaded file or metadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File or metadata
+  /api/v1/email/send:
+    post:
+      summary: Send email (system/admin)
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to:
+                  type: string
+                subject:
+                  type: string
+                body:
+                  type: string
+      responses:
+        "200":
+          description: Sent
+  /api/v1/admin/users:
+    get:
+      summary: List users (admin)
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Users
+  /api/v1/admin/users/{id}/role:
+    put:
+      summary: Update user role (admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [student, mentor, admin]
+      responses:
+        "200":
+          description: Role updated
+security:
+  - BearerAuth: []
+
+

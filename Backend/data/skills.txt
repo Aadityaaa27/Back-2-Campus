@@ -1,0 +1,289 @@
+data structures
+algorithms
+time complexity
+space complexity
+object oriented programming
+functional programming
+multithreading
+concurrency
+memory management
+operating systems
+computer networks
+tcp ip
+dns
+http
+https
+design patterns
+solid principles
+clean code
+
+python
+java
+javascript
+typescript
+go
+csharp
+rust
+php
+kotlin
+swift
+
+html
+css
+react
+angular
+vue
+nextjs
+nuxtjs
+tailwind
+bootstrap
+material ui
+redux
+zustand
+webpack
+vite
+babel
+pwa
+accessibility
+responsive design
+
+backend development
+django
+django rest framework
+fastapi
+flask
+express
+nestjs
+spring boot
+aspnet core
+rest api
+graphql
+grpc
+authentication
+authorization
+jwt
+oauth
+middleware
+dependency injection
+inversion of control
+mvc
+clean architecture
+
+sql
+mysql
+postgresql
+sqlite
+oracle
+sql server
+mongodb
+redis
+cassandra
+dynamodb
+indexing
+normalization
+transactions
+acid
+sharding
+replication
+query optimization
+orm
+sqlalchemy
+hibernate
+prisma
+mongoose
+
+linux
+bash
+shell scripting
+docker
+kubernetes
+ci cd
+github actions
+jenkins
+gitlab ci
+terraform
+ansible
+nginx
+apache
+load balancing
+auto scaling
+
+cloud computing
+aws
+ec2
+s3
+rds
+lambda
+cloudwatch
+azure
+gcp
+serverless
+iam
+cdn
+cloudfront
+cloudflare
+
+system design
+monolithic architecture
+microservices
+event driven architecture
+service oriented architecture
+api gateway
+message queues
+kafka
+rabbitmq
+pubsub
+cap theorem
+horizontal scaling
+vertical scaling
+caching
+distributed systems
+
+encryption
+aes
+rsa
+hashing
+bcrypt
+owasp
+csrf
+xss
+sql injection
+cors
+secrets management
+rbac
+zero trust
+
+unit testing
+integration testing
+end to end testing
+pytest
+jest
+selenium
+cypress
+playwright
+tdd
+bdd
+code coverage
+
+git
+github
+gitlab
+bitbucket
+pull requests
+code reviews
+branching strategies
+
+openapi
+swagger
+postman
+webhooks
+api versioning
+
+ui design
+ux design
+design systems
+typography
+color theory
+interaction design
+wireframing
+prototyping
+usability testing
+ux research
+user journeys
+
+product management
+roadmapping
+user stories
+backlog grooming
+prd
+mvp
+okrs
+kpis
+agile
+scrum
+kanban
+sdlc
+
+qa testing
+manual testing
+automation testing
+regression testing
+performance testing
+load testing
+bug tracking
+
+sre
+monitoring
+alerting
+observability
+incident management
+
+data analysis
+data engineering
+data science
+machine learning
+statistics
+etl
+data pipelines
+airflow
+spark
+snowflake
+bigquery
+data warehousing
+
+ai engineering
+mlops
+model deployment
+llms
+prompt engineering
+vector databases
+
+cybersecurity
+network security
+application security
+penetration testing
+vulnerability assessment
+soc
+siem
+gdpr
+iso 27001
+
+system administration
+network administration
+active directory
+windows server
+linux administration
+vpn
+firewalls
+
+devops
+infrastructure as code
+cost optimization
+
+blockchain
+web3
+smart contracts
+solidity
+nft
+defi
+
+game development
+unity
+unreal engine
+ar
+vr
+xr
+metaverse
+
+technical writing
+api documentation
+solutions engineer
+sales engineer
+customer success
+saas metrics
+
+leadership
+communication
+collaboration
+problem solving
+critical thinking

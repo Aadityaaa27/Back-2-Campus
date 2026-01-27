@@ -1,0 +1,22 @@
+### 1. Login First (Get Fresh Token)
+POST http://localhost:5000/api/v1/auth/login-student
+Content-Type: application/json
+
+{
+  "email": "priti@test.com",
+  "password": "YOUR_PASSWORD_HERE"
+}
+
+###
+
+### 2. Profile API (Replace TOKEN below with login response token)
+GET http://localhost:5000/api/v1/auth/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+### 3. Logout API (Replace TOKEN below)
+POST http://localhost:5000/api/v1/auth/logout
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###

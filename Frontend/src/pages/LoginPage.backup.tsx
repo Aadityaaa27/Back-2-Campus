@@ -1,0 +1,208 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { FadeIn } from '@/components/animations/PageTransition';
+import { GraduationCap, User, Briefcase, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
+type Role = 'student' | 'mentor' | null;
+
+export const LoginPage = () => {
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState<Role>(null);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Login button clicked');
+
+    if (!formData.email || !formData.password) {
+      toast.error('Please fill all fields');
+      return;
+    }
+
+    if (selectedRole === 'student') {
+      toast.success('Welcome, Student!');
+      localStorage.setItem('userEmail', formData.email);
+      navigate('/student');
+    } else if (selectedRole === 'mentor') {
+      toast.success('Welcome, Mentor!');
+      localStorage.setItem('userEmail', formData.email);
+      navigate('/mentor');
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <FadeIn className="w-full max-w-md">
+        {/* Back button */}
+        <Button 
+          variant="ghost" 
+          className="mb-8" 
+          onClick={() => selectedRole ? setSelectedRole(null) : navigate('/')}
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          {selectedRole ? 'Back to Role Selection' : 'Back to Home'}
+        </Button>
+
+        <Card variant="glass" className="p-8">
+          {/* Logo */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', duration: 0.6 }}
+            className="flex items-center justify-center gap-3 mb-8"
+          >
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-cyan flex items-center justify-center">
+              <GraduationCap className="w-7 h-7 text-foreground" />
+            </div>
+            <span className="text-2xl font-bold font-display gradient-text">Back-2-Campus</span>
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            {!selectedRole ? (
+              <motion.div
+                key="role-selection"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h2 className="text-2xl font-bold font-display text-center mb-2">Welcome Back</h2>
+                <p className="text-muted-foreground text-center mb-8">Choose how you want to continue</p>
+
+                <div className="space-y-4">
+                  <Button
+                    variant="gradient"
+                    size="lg"
+                    className="w-full group"
+                    onClick={() => setSelectedRole('student')}
+                  >
+                    <User className="w-5 h-5 mr-2" />
+                    Continue as Student
+                    <ArrowRight className="ml-auto w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+
+                  <Button
+                    variant="gradient"
+                    size="lg"
+                    className="w-full group"
+                    onClick={() => setSelectedRole('mentor')}
+                  >
+                    <Briefcase className="w-5 h-5 mr-2" />
+                    Continue as Mentor
+                    <ArrowRight className="ml-auto w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </div>
+              </motion.div>
+            ) : selectedRole === 'student' ? (
+              <motion.form
+                key="student-form"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleSubmit}
+                className="space-y-5"
+              >
+                <h2 className="text-2xl font-bold font-display text-center mb-6">Student Login</h2>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <Button type="submit" variant="gradient" size="lg" className="w-full mt-6">
+                  Continue to Dashboard
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.form>
+            ) : (
+              <motion.form
+                key="mentor-form"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleSubmit}
+                className="space-y-5"
+              >
+                <h2 className="text-2xl font-bold font-display text-center mb-6">Mentor Login</h2>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <Button type="submit" variant="gradient" size="lg" className="w-full mt-6">
+                  Continue to Dashboard
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-8 pt-6 border-t border-border/50"
+          >
+            <p className="text-xs text-muted-foreground text-center">
+              By continuing, you agree to our Terms of Service and Privacy Policy
+            </p>
+          </motion.div>
+        </Card>
+      </FadeIn>
+    </div>
+  );
+};

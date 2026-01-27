@@ -1,0 +1,10 @@
+{
+  "react.js": "react",
+  "node.js": "node",
+  "express.js": "express",
+  "restful api": "rest api",
+  "jwt token": "jwt",
+  "mongo": "mongodb",
+  "js": "javascript",
+  "ts": "typescript"
+}
