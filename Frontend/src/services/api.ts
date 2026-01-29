@@ -9,7 +9,7 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 seconds
+  timeout: 30000, // 30 seconds
 });
 
 // Request interceptor - Add auth token to requests
@@ -127,9 +127,7 @@ export const authAPI = {
     fullName: string;
     email: string;
     password: string;
-    company: string;
-    position: string;
-    yearsOfExperience: number;
+    passedYear: number;
     expertise: string[];
   }): Promise<SignupResponse> => {
     const response = await apiClient.post<SignupResponse>('/auth/signup-mentor', userData);

@@ -88,9 +88,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           fullName: formData.name,
           email: formData.email,
           password: formData.password,
-          company: 'Not specified', // Add company field if needed in form
-          position: 'Not specified', // Add position field if needed in form
-          yearsOfExperience: parseInt(formData.passedYear) || 0,
+          passedYear: parseInt(formData.passedYear) || 0,
           expertise: expertise,
         });
 
