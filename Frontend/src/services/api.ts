@@ -3,13 +3,13 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 // API Base URL - Update this based on environment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://student-alumini-webapp.onrender.com/api/v1';
 
-// Create axios instance
+// Create axios instance with longer timeout for Render cold starts
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30 seconds
+  timeout: 60000, // 60 seconds (for slow backend/cold starts)
 });
 
 // Request interceptor - Add auth token to requests
@@ -109,7 +109,7 @@ export const authAPI = {
     return response.data;
   },
 
-  // Student Signup
+  // Student Signup with extended timeout
   signupStudent: async (userData: {
     fullName: string;
     email: string;
@@ -118,11 +118,13 @@ export const authAPI = {
     current_year: string;
     subject_to_discuss: string;
   }): Promise<SignupResponse> => {
-    const response = await apiClient.post<SignupResponse>('/auth/signup-student', userData);
+    const response = await apiClient.post<SignupResponse>('/auth/signup-student', userData, {
+      timeout: 90000, // 90 seconds for signup
+    });
     return response.data;
   },
 
-  // Alumni/Mentor Signup
+  // Alumni/Mentor Signup with retry logic
   signupMentor: async (userData: {
     fullName: string;
     email: string;
@@ -130,7 +132,9 @@ export const authAPI = {
     passedYear: number;
     expertise: string[];
   }): Promise<SignupResponse> => {
-    const response = await apiClient.post<SignupResponse>('/auth/signup-mentor', userData);
+    const response = await apiClient.post<SignupResponse>('/auth/signup-mentor', userData, {
+      timeout: 90000, // 90 seconds for signup (even longer for cold start)
+    });
     return response.data;
   },
 

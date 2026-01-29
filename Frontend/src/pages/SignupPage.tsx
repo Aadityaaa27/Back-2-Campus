@@ -106,7 +106,14 @@ const handleSubmit = async (e: React.FormEvent) => {
       }
     } catch (error) {
       const errorMessage = handleApiError(error);
-      toast.error(errorMessage);
+      
+      // Better error message for timeout
+      if (errorMessage.includes('timeout') || errorMessage.includes('Network Error')) {
+        toast.error('Server is slow or not responding. Please try again in a moment.');
+      } else {
+        toast.error(errorMessage);
+      }
+      
       console.error('Signup error:', error);
     } finally {
       setIsLoading(false);
