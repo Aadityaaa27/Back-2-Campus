@@ -39,7 +39,10 @@ const studentSignup = async (req, res) => {
       subject_to_discuss,
     });
 
-    res.status(201).json({ message: "Student registered successfully" });
+    res.status(201).json({ 
+      success: true,
+      message: "Student registered successfully" 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -64,7 +67,10 @@ const mentorSignup = async (req, res) => {
       expertise,
     });
 
-    res.status(201).json({ message: "Mentor registered successfully" });
+    res.status(201).json({ 
+      success: true,
+      message: "Mentor registered successfully" 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -84,8 +90,8 @@ const studentLogin = async (req, res) => {
 
     const token = generateToken(student._id, student.role);
     res.status(200).json({
-      sucess: true,
-      message: "user logged in sucessfully",
+      success: true,
+      message: "Student logged in successfully",
       token,
       role: student.role,
     });
@@ -107,7 +113,12 @@ const mentorLogin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
 
     const token = generateToken(mentor._id, mentor.role);
-    res.json({ token, role: mentor.role });
+    res.status(200).json({
+      success: true,
+      message: "Mentor logged in successfully",
+      token,
+      role: mentor.role,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
