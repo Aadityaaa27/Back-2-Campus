@@ -1,0 +1,38 @@
+{
+  "frontend": [
+    "html",
+    "css",
+    "javascript",
+    "react",
+    "angular",
+    "vue",
+    "nextjs",
+    "tailwind"
+  ],
+  "backend": [
+    "node",
+    "express",
+    "django",
+    "fastapi",
+    "spring boot",
+    "rest api"
+  ],
+  "database": [
+    "mongodb",
+    "mysql",
+    "postgresql",
+    "redis"
+  ],
+  "devops": [
+    "docker",
+    "kubernetes",
+    "ci cd",
+    "aws"
+  ],
+  "security": [
+    "jwt",
+    "oauth",
+    "bcrypt",
+    "encryption"
+  ]
+}
